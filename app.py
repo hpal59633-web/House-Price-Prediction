@@ -1,3 +1,4 @@
+from sklearn.ensemble import RandomForestRegressor
 import streamlit as st
 import pickle
 from sklearn.preprocessing import StandardScaler
@@ -20,8 +21,27 @@ st.sidebar.title('Select House features: ')
 st.sidebar.image('https://cdn.dribbble.com/userupload/20000742/file/original-aaf23458355a156d0cf85b8217a5065a.gif')
 all_value = []
 for i in final_X:
+  min_val = final_X[i].min()
   result = st.sidebar.slider(f'Select {i} value')
   all_value.append(result)
+  
+user_x = scaler.transform([all_value])
+@st.cache_data
+def ml_model(x,y):
+  model = randomforestregressor()
+  model.fit(x,y)
+  return model
+model = ml_model(scaled_x,y)
+house_price = model.prediction(user_x)[0]
 
-st.write(all_value)
+final_price = round(house_price * 100000,2)
+
+with st.spinner('prediction house price'):
+  import time
+  time.sleep(2)
+
+st.success(f'estimated house price is : $ {final_price}')
+st.markdown('''**Design and Developed by : Himanshu Sir''')
+  
+
 
